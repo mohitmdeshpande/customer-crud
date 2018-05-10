@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="default">
+    <head>
+        <title>Customer List</title>
+    </head>
+    <body>
+        <div layout:fragment="content" class="row">
+            <div class="col-xs-8 col-md-8">
+                <h3>
+                    <a href="/create" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Customer</a>
+                </h3>
+                <h2>Customer List</h2>
+                <div class="table-responsive">
+                    <table class="table" id="customer-table">
+                        <thead>
+                            <tr>
+                                <th>Customer Name</th>
+                                <th>Customer Address</th>
+                                <th>Customer Email</th>
+                                <th>Customer Mobile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="customer : ${customers}">
+                                <td><a th:text="${customer.custName}" th:href="@{'/show/' + ${customer.id}}"></a></td>
+                                <td th:text="${customer.custAddress}"></td>
+                                <td th:text="${customer.custEEmail}"></td>
+                                 <td th:text="${customer.custMobile}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
