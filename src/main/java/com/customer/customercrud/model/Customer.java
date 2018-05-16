@@ -4,10 +4,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 
 @Document(collection = "customers")
-public class Customer {
+public class Customer {  //model class with getter,setter & constructors
 
 	@Id
-	String id;
+	String id; //primary key auto generated
 	String custName;
 	String custAddress;
 	String custEEmail;
