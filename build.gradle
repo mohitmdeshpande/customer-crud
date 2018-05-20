@@ -21,6 +21,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'application'
 //apply plugin: 'docker'
 apply plugin: 'com.bmuschko.docker-remote-api'
+apply plugin: 'com.bmuschko.docker-java-application'
 
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.Dockerfile
@@ -63,15 +64,21 @@ dependencies {
     buildArgs(['JAR_FILE': "${bootJar.archiveName}"])
 }*/
 
-docker {
+/*docker {
     if (System.env.containsKey('DOCKER_HOST') && System.env.containsKey('DOCKER_CERT_PATH')) {
         url = System.env.DOCKER_HOST.replace("tcp", "https")
         certPath = new File(System.env.DOCKER_CERT_PATH)
     }
+}*/
+task copyDockerfile(type: Copy) {
+    from 'Dockerfile'
+    into buildDir
 }
+
 task buildImage(type: DockerBuildImage) {
     dependsOn assemble
-    inputDir = project.rootDir
+	dependsOn copyDockerfile
+    inputDir = project.buildDir
     tag = "arquillian/game-service:${project.version}"
 }
 
@@ -80,3 +87,19 @@ task createDockerfile(type: Dockerfile) {
     from 'ubuntu:12.04'
     maintainer 'Benjamin Muschko "benjamin.muschko@gmail.com"'
 }
+
+mainClassName = 'com.customer.customercrud.CustomerCrudApplication'
+
+docker {
+	javaApplication {
+		baseImage = 'java:8-jre'
+        maintainer = 'Mohit Deshpande "monitdeshpande@gmail.com"'
+		ports = [8080]
+		tag = "customer_crud:${project.version}"
+		
+    }
+    url = 'tcp://192.168.99.100:2376'
+    certPath = new File(System.properties['user.home'], '.docker/machine/certs')
+}
+
+
